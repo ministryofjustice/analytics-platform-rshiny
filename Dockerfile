@@ -11,6 +11,7 @@ MAINTAINER Winston Chang "winston@rstudio.com"
 ## instructions followed here.
 
 RUN apt-get update
+RUN apt-mark hold r-base-core  # apt-get commands such as apt-get install curl will sometimes upgrade the version of R, which we want pinned
 
 RUN apt-get remove -y libperl5.26
 
