@@ -1,0 +1,12 @@
+---
+version: "3.7"
+
+services:
+  rshiny:
+    image: ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG:-latest}
+    ports: [8080:80]
+    network_mode: ${NETWORK}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: ${NETWORK:-default}

@@ -11,31 +11,13 @@ Users can deploy [shiny apps](https://shiny.rstudio.com/) on the Analytical Plat
 #### Build
 
 ```
-docker image build --no-cache -t quay.io/mojanalytics/rshiny .
+make build
 ```
-
-Generally you don't need to do this after making changes as `quay.io` will automatically build the Dockerfile on commits.
 
 #### Run locally
 
 ```
-docker container run -d --rm quay.io/mojanalytics/rshiny
-```
-
-#### Tag/Push
-
-When satisfied Tag and push the image
-
-Tag
-
-```
-docker image tag quay.io/mojanalytics/rshiny quay.io/mojanalytics/rshiny:<x.x.x>
-```
-
-Push
-
-```
-docker image push quay.io/mojanalytics/rshiny:<x.x.x>
+make up
 ```
 
 ## Per User Apps
