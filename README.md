@@ -8,15 +8,15 @@ Users can deploy [shiny apps](https://shiny.rstudio.com/) on the Analytical Plat
 
 ## Usage
 
-#### Build
+### Build
 
-```
+```shell
 make build
 ```
 
 #### Run locally
 
-```
+```shell
 make up
 ```
 
