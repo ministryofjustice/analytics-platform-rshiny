@@ -9,7 +9,7 @@ name: Build & Test
 
 jobs:
   yamllint:
-    runs-on: ubuntu-20.04
+    runs-on: [self-hosted, management-ecr]
     steps:
       - name: Check out code
         uses: actions/checkout@main
@@ -17,7 +17,7 @@ jobs:
         uses: actionshub/yamllint@main
 
   mdl:
-    runs-on: ubuntu-20.04
+    runs-on: [self-hosted, management-ecr]
     steps:
       - name: Check out code
         uses: actions/checkout@main
@@ -26,7 +26,7 @@ jobs:
 
   docker:
     if: ${{ github.repository }} == 'analytics-platform-rshiny'
-    runs-on: [self-hosted, ecr]
+    runs-on: [self-hosted, management-ecr]
     env:
       REPOSITORY: rshiny
       ECR_REPOSITORY: rshiny
