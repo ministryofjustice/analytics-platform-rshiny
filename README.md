@@ -29,3 +29,16 @@ Each shiny app has its own repository with `Dockerfile` based on [`moj-analytica
 This docker image is [used as base image in the `moj-analytical-services/rshiny-template` repository (`conda` branch)](https://github.com/moj-analytical-services/rshiny-template/blob/conda/Dockerfile#L1).
 
 Another significant difference of the `conda` branch is that it also [uses `analytics-platform-shiny-server`](https://github.com/moj-analytical-services/rshiny-template/blob/conda/Dockerfile#L17) instead of official shiny server - main reason for this was to be able to use R environment installed with conda (or any R environment in your `PATH`).
+
+# Versioning
+
+This repository was historically rebuilt relatively infrequently. We have now added scheduled 
+updates that occur weekly, to keep the base image up to date. This alters the semver scheme from 
+4.0.0 onwards, meaning that:
+
+* CI generates patches
+* non-breaking changes get a minor version bump
+* Breaking changes get a major version bump
+
+This is still not ideal but should be better than what came before while we work out a proper 
+build and release management approach.
