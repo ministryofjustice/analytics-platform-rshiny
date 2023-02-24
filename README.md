@@ -30,7 +30,7 @@ This docker image is [used as base image in the `moj-analytical-services/rshiny-
 
 Another significant difference of the `conda` branch is that it also [uses `analytics-platform-shiny-server`](https://github.com/moj-analytical-services/rshiny-template/blob/conda/Dockerfile#L17) instead of official shiny server - main reason for this was to be able to use R environment installed with conda (or any R environment in your `PATH`).
 
-# Versioning
+## Versioning
 
 This repository was historically rebuilt relatively infrequently. We have now added scheduled updates that occur weekly, to keep the base image up to date. This alters the semver scheme from 4.0.0 onwards, meaning that:
 
