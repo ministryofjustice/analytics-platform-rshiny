@@ -27,7 +27,7 @@ jobs:
 
   docker:
     if: ${{ github.repository }} == 'analytics-platform-rshiny'
-    runs-on: [self-hosted, ecr]
+    runs-on: [self-hosted, management-ecr]
     env:
       REPOSITORY: rshiny
       ECR_REPOSITORY: rshiny
