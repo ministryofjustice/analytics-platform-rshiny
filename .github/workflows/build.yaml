@@ -7,7 +7,7 @@ name: Build & Test
     branches: [main]
     tags: ["*"]
   schedule:
-    - cron: "0 4 0 0 6"
+    - cron: '0 4 0 0 6'
 jobs:
   yamllint:
     runs-on: ubuntu-20.04
