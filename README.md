@@ -32,13 +32,10 @@ Another significant difference of the `conda` branch is that it also [uses `anal
 
 # Versioning
 
-This repository was historically rebuilt relatively infrequently. We have now added scheduled 
-updates that occur weekly, to keep the base image up to date. This alters the semver scheme from 
-4.0.0 onwards, meaning that:
+This repository was historically rebuilt relatively infrequently. We have now added scheduled updates that occur weekly, to keep the base image up to date. This alters the semver scheme from 4.0.0 onwards, meaning that:
 
 * CI generates patches
 * non-breaking changes get a minor version bump
 * Breaking changes get a major version bump
 
-This is still not ideal but should be better than what came before while we work out a proper 
-build and release management approach.
+This is still not ideal but should be better than what came before while we work out a proper build and release management approach.
