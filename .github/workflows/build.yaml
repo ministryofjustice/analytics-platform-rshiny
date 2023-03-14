@@ -6,6 +6,8 @@ name: Build & Test
   push:
     branches: [main]
     tags: ["*"]
+  schedule:
+    - cron: '0 0 * * SAT'
 
 jobs:
   yamllint:
@@ -30,7 +32,8 @@ jobs:
         r: [4.1, 4.2]
         shinyserver: [0.0.6, 0.0.5, 0.0.4]
     if: ${{ github.repository }} == 'analytics-platform-rshiny'
-    runs-on: [self-hosted, ecr]
+#    runs-on: [self-hosted, ecr]
+    runs-on: ubuntu-20.04
     env:
       REPOSITORY: rshiny
       ECR_REPOSITORY: rshiny
