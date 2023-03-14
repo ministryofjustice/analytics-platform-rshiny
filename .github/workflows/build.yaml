@@ -53,10 +53,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: "593291632749.dkr.ecr.eu-west-1.amazonaws.com/rshiny:r${{ matrix.r }}-shinyserver${{ matrix.shinyserver }}"
-          build-args: "r=${{ matrix.r }} shinyserver=${{ matrix.shinyserver }}"
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: "rshiny"
+          IMAGE_TAG: "r${{ matrix.r }}-shiny${{ matrix.shinyserver }}"
+        run: |
+          docker build --build-arg r=${{ matrix.r }} --build-arg shinyserver=${{ matrix.shinyserver }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
