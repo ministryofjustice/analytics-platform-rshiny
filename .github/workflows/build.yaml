@@ -25,6 +25,10 @@ jobs:
         uses: actionshub/markdownlint@main
 
   docker:
+    strategy:
+      matrix:
+        r: [4.1, 4.2]
+        shinyserver: [0.0.6, 0.0.5, 0.0.4]
     if: ${{ github.repository }} == 'analytics-platform-rshiny'
     runs-on: [self-hosted, ecr]
     env:
@@ -43,52 +47,16 @@ jobs:
         with:
           registries: ${{ steps.login-ecr.outputs.registry }}
 
-      - name: Prep Tags
-
-        id: prep
-        run: |
-          TAG=noop
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            TAG=${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            TAG=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
-            if [ "${{ github.event.repository.default_branch }}" = "$TAG" ]; then
-              TAG=edge
-            fi
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            TAG=pr-${{ github.event.number }}
-          elif [ "${{ github.event_name }}" = "push" ]; then
-            TAG="sha-${GITHUB_SHA::8}"
-          fi
-          echo ::set-output name=tag::${TAG}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Build image
-        run: make clean && make build
-        env:
-          NETWORK: host
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ steps.prep.outputs.tag }}
-
-      # - name: Test
-      #   run: make test
-      #   env:
-      #     NETWORK: host
-      #     REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      #     IMAGE_TAG: ${{ steps.prep.outputs.tag }}
-
-      - name: Push image
-        run: make push
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ steps.prep.outputs.tag }}
-
-      - name: Cleanup
-        if: ${{ always() }}
-        run: make clean
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ steps.prep.outputs.tag }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: "593291632749.dkr.ecr.eu-west-1.amazonaws.com/rshiny:r${{ matrix.r }}-shinyserver${{ matrix.shinyserver }}"
+          build-args: 
+            r: ${{ matrix.r }}
+            shinyserver: ${{ matrix.shinyserver }}
+          
