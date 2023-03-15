@@ -1,13 +1,15 @@
 ---
 name: Build & Test
 
-"on":
+on:
   pull_request:
   push:
     branches: [main]
     tags: ["*"]
   schedule:
     - cron: '0 0 * * SAT'
+
+permissions: {}
 
 jobs:
   yamllint:
@@ -33,6 +35,9 @@ jobs:
         shinyserver: [0.0.6, 0.0.5, 0.0.4]
     if: ${{ github.repository }} == 'analytics-platform-rshiny'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # This is required for actions/checkout
+      id-token: write # This is required for requesting the JWT
     env:
       REPOSITORY: rshiny
       ECR_REPOSITORY: rshiny
