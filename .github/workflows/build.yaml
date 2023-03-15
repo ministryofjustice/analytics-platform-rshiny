@@ -11,7 +11,7 @@ name: Build & Test
 
 jobs:
   yamllint:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@main
@@ -19,7 +19,7 @@ jobs:
         uses: actionshub/yamllint@main
 
   mdl:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@main
@@ -32,19 +32,18 @@ jobs:
         r: [4.1, 4.2]
         shinyserver: [0.0.6, 0.0.5, 0.0.4]
     if: ${{ github.repository }} == 'analytics-platform-rshiny'
-#    runs-on: [self-hosted, management-ecr]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       REPOSITORY: rshiny
       ECR_REPOSITORY: rshiny
     needs: [mdl, yamllint]
     steps:
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-region: eu-west-1
-          role-to-assume: arn:aws:iam::042130406152:role/github-actions-ecr
-          role-session-name: githubactionsrolesession
+          role-to-assume: "arn:aws:iam::593291632749:role/github-actions-ecr-oidc"
+          role-session-name: githubactionsiamsession
+          aws-region: eu-west-2
 
       - name: Login to Amazon ECR
         id: login-ecr
