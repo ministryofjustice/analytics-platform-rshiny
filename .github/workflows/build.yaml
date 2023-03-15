@@ -9,7 +9,8 @@ on:
   schedule:
     - cron: '0 0 * * SAT'
 
-permissions: {}
+permissions:
+  contents: write # This is required for actions/checkout
 
 jobs:
   yamllint:
@@ -36,7 +37,6 @@ jobs:
     if: ${{ github.repository }} == 'analytics-platform-rshiny'
     runs-on: ubuntu-latest
     permissions:
-      contents: write # This is required for actions/checkout
       id-token: write # This is required for requesting the JWT
     env:
       REPOSITORY: rshiny
