@@ -7,7 +7,7 @@ on:
     branches: [main]
     tags: ["*"]
   schedule:
-    - cron: '0 0 * * SAT'
+    - cron: "0 0 * * SAT"
 
 permissions:
   contents: write # This is required for actions/checkout
