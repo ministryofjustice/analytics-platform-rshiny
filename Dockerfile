@@ -5,10 +5,10 @@ FROM rocker/shiny:${r}
 ARG shinyserver=0.0.6 # must correspond with an analytics-platform-shiny-server version from here: https://github.com/ministryofjustice/analytics-platform-shiny-server
 
 ENV STRINGI_DISABLE_PKG_CONFIG true \
-  AWS_DEFAULT_REGION eu-west-1 \
-  PATH="/opt/shiny-server/bin:/opt/shiny-server/ext/node/bin:${PATH}" \
-  SHINY_APP=/srv/shiny-server \
-  NODE_ENV=production
+AWS_DEFAULT_REGION eu-west-1 \
+PATH="/opt/shiny-server/bin:/opt/shiny-server/ext/node/bin:${PATH}" \
+SHINY_APP=/srv/shiny-server \
+NODE_ENV=production
 
 RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list
 RUN apt-get update -yq -y && apt-get install -yq --no-install-recommends ca-certificates && apt-get clean && rm -rf /var/lib/apt/lists/* && echo "dash dash/sh boolean false" | debconf-set-selections && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
