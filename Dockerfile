@@ -27,7 +27,7 @@ RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list && \
     wget -O /tmp/shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb && \
     wget -O /tmp/analytics-platform-shiny-server.tar.gz https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz && \
     gdebi -n /tmp/r_amd64.deb  && \
-    /opt/R/4.1.3/bin/R -e "install.packages('shiny', repos='https://packagemanager.rstudio.com/cran/__jammy__/jammy/latest')" && \
+    /opt/R/${r}/bin/R -e "install.packages('shiny', repos='https://packagemanager.rstudio.com/cran/__jammy__/jammy/latest')" && \
     gdebi -n /tmp/shiny-server.deb && \
     mkdir -p /var/log/shiny-server && \
     npm i -g /tmp/analytics-platform-shiny-server.tar.gz && \
