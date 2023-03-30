@@ -12,7 +12,7 @@ ENV STRINGI_DISABLE_PKG_CONFIG=true \
 
 RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list && \
     apt-get update -yq -y && \
-    apt-get install -yq --no-install-recommends ca-certificates && \
+    apt-get install -yq --no-install-recommends ca-certificates python3 python3-boto&& \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     echo "dash dash/sh boolean false" | debconf-set-selections && \
@@ -33,6 +33,8 @@ RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list && \
     npm i -g /tmp/analytics-platform-shiny-server.tar.gz && \
     chown -R shiny:shiny /srv/shiny-server && \
     rm /tmp/r_amd64.deb /tmp/shiny-server.deb /tmp/analytics-platform-shiny-server.tar.gz && \
+    apt-get remove -y gdebi && \
+    apt-get autoremove -y && \
     apt-get clean && \ 
     apt-get autoclean && \
     rm -rf /var/lib/apt/lists/*  # && chown shiny:shiny /usr/bin/shiny-server && chown shiny:shiny /usr/bin/shiny-server.sh
