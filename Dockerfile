@@ -14,7 +14,7 @@ RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list && \
     sed -i s,http://security.ubuntu.com/ubuntu/,http://mirror.mythic-beasts.com/ubuntu/,g /etc/apt/sources.list && \
     sed -i s,http://archive.ubuntu.com/ubuntu/,http://mirror.mythic-beasts.com/ubuntu/,g /etc/apt/sources.list && \
     apt-get update -yq -y && \
-    apt-get install -yq --no-install-recommends ca-certificates python3 python3-boto&& \
+    apt-get install -yq --no-install-recommends ca-certificates python3 python3-boto && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     echo "dash dash/sh boolean false" | debconf-set-selections && \
@@ -50,7 +50,7 @@ RUN rm -rf /srv/shiny-server
 ADD shiny-server.conf /etc/shiny-server/shiny-server.conf
 ADD shiny-server.sh /usr/bin/shiny-server.sh
 
-RUN groupadd -g 998 shiny && useradd --create-home --no-log-init -u 998 -g 998 shiny && chown -R 998:998 /usr/bin/shiny-server.sh && chmod +x /usr/bin/shiny-server.sh 
+RUN groupmod -g 998 shiny && usermod -u 998 -u 998 -g 998 shiny && chown -R 998:998 /usr/bin/shiny-server.sh && chmod +x /usr/bin/shiny-server.sh && chown -R 998:998 /srv/shiny
 
 USER shiny
 
