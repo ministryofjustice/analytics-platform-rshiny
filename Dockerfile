@@ -49,7 +49,8 @@ RUN rm -rf /srv/shiny-server
 # Shiny runs as 'shiny' user, adjust app directory permissions
 ADD shiny-server.conf /etc/shiny-server/shiny-server.conf
 ADD shiny-server.sh /usr/bin/shiny-server.sh
-RUN chown -R shiny:shiny /usr/bin/shiny-server.sh && chmod +x /usr/bin/shiny-server.sh 
+
+RUN groupadd -g 998 shiny && useradd --create-home --no-log-init -u 998 -g 998 shiny && chown -R 998:998 /usr/bin/shiny-server.sh && chmod +x /usr/bin/shiny-server.sh 
 
 USER shiny
 
