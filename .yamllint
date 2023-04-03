@@ -4,3 +4,5 @@ rules:
   line-length:
     max: 256
     level: warning
+  comments:
+    min-spaces-from-content: 1
