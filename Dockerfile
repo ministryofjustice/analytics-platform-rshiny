@@ -1,5 +1,6 @@
-FROM rocker/shiny:${r}
+ARG r=4.1
 
+FROM rocker/shiny:${r}
 
 ARG shinyserver=0.0.6 # must correspond with an analytics-platform-shiny-server version from here: https://github.com/ministryofjustice/analytics-platform-shiny-server
 
