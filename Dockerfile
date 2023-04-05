@@ -31,9 +31,9 @@ RUN mkdir -p /var/log/shiny-server && \
     echo 'options(renv.config.pak.enabled = TRUE, renv.config.repos.override = "https://cloud.r-project.org/", repos="https://cloud.r-project.org/")' >> /usr/local/lib/R/etc/Rprofile.site && \
     wget https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz -O /tmp/analytics-platform-shiny-server.tar.gz && npm i -g /tmp/analytics-platform-shiny-server.tar.gz
 
-USER shiny
-
 RUN sed -i 's/3838/9999/g' /etc/shiny-server/shiny-server.conf
+
+USER shiny
 
 CMD ["/bin/bash", "-c", "/usr/bin/shiny-server.sh"]
 EXPOSE 9999
