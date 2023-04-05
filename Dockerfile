@@ -1,6 +1,5 @@
-ARG r=4.1 # must correspond with a rocker tag as per https://hub.docker.com/r/rocker/shiny/tags
-
 FROM rocker/shiny:${r}
+
 
 ARG shinyserver=0.0.6 # must correspond with an analytics-platform-shiny-server version from here: https://github.com/ministryofjustice/analytics-platform-shiny-server
 
@@ -16,10 +15,10 @@ RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list && \
 
 WORKDIR /srv/shiny-server
 
-SHELL ["/bin/bash", "-c"]
+#SHELL ["/bin/bash", "-c"]
 
 # Cleanup shiny-server dir
-RUN rm -rf ./*
+RUN rm -rf /srv/shiny-server
 
 # Make sure the directory for individual app logs exists
 RUN mkdir -p /var/log/shiny-server && \
@@ -31,11 +30,9 @@ RUN mkdir -p /var/log/shiny-server && \
     echo 'options(renv.config.pak.enabled = TRUE, renv.config.repos.override = "https://cloud.r-project.org/", repos="https://cloud.r-project.org/")' >> /usr/local/lib/R/etc/Rprofile.site && \
     wget https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz -O /tmp/analytics-platform-shiny-server.tar.gz && npm i -g /tmp/analytics-platform-shiny-server.tar.gz
 
-# Shiny runs as 'shiny' user, adjust app directory permissions
-RUN chown -R shiny:shiny .
+USER shiny
 
-ENV PKG_CONFIG_PATH /opt/conda/lib/pkgconfig/
-# Run shiny-server on port 80
 RUN sed -i 's/3838/9999/g' /etc/shiny-server/shiny-server.conf
+
 CMD ["/bin/bash", "-c", "/usr/bin/shiny-server.sh"]
 EXPOSE 9999
