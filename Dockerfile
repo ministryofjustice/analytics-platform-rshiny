@@ -27,6 +27,8 @@ RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list && \
     wget -O /tmp/shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb && \
     wget -O /tmp/analytics-platform-shiny-server.tar.gz https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz && \
     gdebi -n /tmp/r_amd64.deb  && \
+    /opt/R/${r}/bin/R -e "install.packages('renv', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" && \
+    /opt/R/${r}/bin/R -e "install.packages('remotes', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" && \
     /opt/R/${r}/bin/R -e "install.packages('shiny', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" && \
     gdebi -n /tmp/shiny-server.deb && \
     mkdir -p /var/log/shiny-server && \
@@ -37,7 +39,7 @@ RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list && \
     apt-get autoremove -y && \
     apt-get clean && \ 
     apt-get autoclean && \
-    rm -rf /var/lib/apt/lists/*  # && chown shiny:shiny /usr/bin/shiny-server && chown shiny:shiny /usr/bin/shiny-server.sh
+    rm -rf /var/lib/apt/lists/* # && chown shiny:shiny /usr/bin/shiny-server && chown shiny:shiny /usr/bin/shiny-server.sh
 
 WORKDIR /srv/shiny-server
 
