@@ -46,7 +46,6 @@ jobs:
     needs: [mdl, yamllint]
     steps:
       - name: Configure AWS credentials
-
         if: ${{ !env.ACT }}
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -91,4 +90,3 @@ jobs:
         run: |
           docker build --build-arg r=${{ matrix.r }} --build-arg shinyserver=${{ matrix.shinyserver }} -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
