@@ -38,8 +38,8 @@ RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list && \
     apt-get autoremove -y && \
     apt-get clean && \ 
     apt-get autoclean && \
-    rm -rf /var/lib/apt/lists/* && \ # && chown shiny:shiny /usr/bin/shiny-server && chown shiny:shiny /usr/bin/shiny-server.sh
-    sed -i 's;# options(repos = c(CRAN="@CRAN@"));options(repos = c(CRAN = "https://cloud.r-project.org"));g' /opt/R/4.1.3/lib/R/library/base/R/Rprofile && \
+    rm -rf /var/lib/apt/lists/* && \ 
+    sed -i 's;# options(repos = c(CRAN="@CRAN@"));options(repos = c(CRAN = "https://cloud.r-project.org"));g' /opt/R/4.1.3/lib/R/library/base/R/Rprofile 
 
 WORKDIR /srv/shiny-server
 
