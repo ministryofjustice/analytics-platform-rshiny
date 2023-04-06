@@ -14,7 +14,7 @@ RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list && \
     sed -i s,http://security.ubuntu.com/ubuntu/,http://mirror.mythic-beasts.com/ubuntu/,g /etc/apt/sources.list && \
     sed -i s,http://archive.ubuntu.com/ubuntu/,http://mirror.mythic-beasts.com/ubuntu/,g /etc/apt/sources.list && \
     apt-get update -yq -y && \
-    apt-get install -yq --no-install-recommends ca-certificates python3 python3-boto libcurl4-openssl-dev libssl-dev libudunits2-dev libgdal-dev gdal-bin libgeos-dev libproj-dev libsqlite3-dev zlib1g-dev && \
+    apt-get install -yq --no-install-recommends ca-certificates python3 python3-boto libcurl4-openssl-dev libssl-dev libudunits2-dev libgdal-dev gdal-bin libgeos-dev libproj-dev libsqlite3-dev zlib1g-dev xtail && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     echo "dash dash/sh boolean false" | debconf-set-selections && \
