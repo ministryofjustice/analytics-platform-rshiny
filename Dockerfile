@@ -16,25 +16,25 @@ RUN  sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list \
   && sed -i s,http://archive.ubuntu.com/ubuntu/,http://mirror.mythic-beasts.com/ubuntu/,g /etc/apt/sources.list \
   && apt-get update -yq -y \
   && apt-get install -yq --no-install-recommends \
-    ca-certificates \
-    python3 \
-    python3-boto \
+  ca-certificates \
+  python3 \
+  python3-boto \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && echo "dash dash/sh boolean false" | debconf-set-selections \
   && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash \
   && sed -i s,http:,https:,g /etc/apt/sources.list \
   && apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends  \
-    wget \
-    curl \
-    git \
-    gdebi \
-    tzdata \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+  wget \
+  curl \
+  git \
+  gdebi \
+  tzdata \
   && wget -O /tmp/r_amd64.deb https://cdn.posit.co/r/ubuntu-2004/pkgs/r-${r}_1_amd64.deb \
   && wget -O /tmp/shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb \
   && wget -O /tmp/analytics-platform-shiny-server.tar.gz https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz \
-  && gdebi -n /tmp/r_amd64.deb  \
+  && gdebi -n /tmp/r_amd64.deb \
   && /opt/R/${r}/bin/R -e "install.packages('shiny', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
   && gdebi -n /tmp/shiny-server.deb \
   && mkdir -p /var/log/shiny-server \
@@ -42,7 +42,7 @@ RUN  sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list \
   && chown -R shiny:shiny /srv/shiny-server \
   && rm /tmp/r_amd64.deb /tmp/shiny-server.deb /tmp/analytics-platform-shiny-server.tar.gz \
   && apt-get remove -y \
-    gdebi \
+  gdebi \
   && apt-get autoremove -y \
   && apt-get clean \
   && apt-get autoclean \
