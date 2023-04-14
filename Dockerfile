@@ -35,7 +35,7 @@ RUN  sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list \
   && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash \
   && sed -i s,http:,https:,g /etc/apt/sources.list \
   && apt-get update \
-  && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+  && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -yq --no-install-recommends \
     wget \
     curl \
     git \
