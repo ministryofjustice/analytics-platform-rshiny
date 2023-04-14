@@ -8,9 +8,10 @@ ENV STRINGI_DISABLE_PKG_CONFIG=true \
   PATH="/opt/R/${r}/bin:/opt/shiny-server/bin:/opt/shiny-server/ext/node/bin:${PATH}" \
   SHINY_APP=/srv/shiny-server \
   NODE_ENV=production \
-  TZ="Etc/UTC"
+  TZ="Etc/UTC" \
+  LC_ALL="C.UTF-8"
 
-RUN sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list \
+RUN  sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list \
   && sed -i s,http://security.ubuntu.com/ubuntu/,http://mirror.mythic-beasts.com/ubuntu/,g /etc/apt/sources.list \
   && sed -i s,http://archive.ubuntu.com/ubuntu/,http://mirror.mythic-beasts.com/ubuntu/,g /etc/apt/sources.list \
   && apt-get update -yq -y \
