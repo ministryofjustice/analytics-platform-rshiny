@@ -48,6 +48,8 @@ RUN  sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list \
   && /opt/R/${r}/bin/R -e "install.packages('renv', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
   && /opt/R/${r}/bin/R -e "install.packages('remotes', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
   && /opt/R/${r}/bin/R -e "install.packages('shiny', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
+  && /opt/R/${r}/bin/R -e "install.packages('usethis', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
+  && /opt/R/${r}/bin/R -e "usethis::edit_r_profile()" \
   && gdebi -n /tmp/shiny-server.deb \
   && mkdir -p /var/log/shiny-server \
   && npm i -g /tmp/analytics-platform-shiny-server.tar.gz \
