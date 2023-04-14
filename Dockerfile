@@ -11,9 +11,9 @@ ENV STRINGI_DISABLE_PKG_CONFIG=true \
   TZ="Etc/UTC" \
   LC_ALL="C.UTF-8"
 
-RUN  sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list \
-  && sed -i s,http://security.ubuntu.com/ubuntu/,http://mirror.bytemark.co.uk/ubuntu/,g /etc/apt/sources.list \
-  && sed -i s,http://archive.ubuntu.com/ubuntu/,http://mirror.bytemark.co.uk/ubuntu/,g /etc/apt/sources.list \
+RUN  sed -i 's/deb/deb [trusted=yes]/g' /etc/apt/sources.list \
+  && sed -i 's,http://security.ubuntu.com/ubuntu/,http://mirror.bytemark.co.uk/ubuntu/,g' /etc/apt/sources.list \
+  && sed -i 's,http://archive.ubuntu.com/ubuntu/,http://mirror.bytemark.co.uk/ubuntu/,g' /etc/apt/sources.list \
   && apt-get update -yq -y \
   && apt-get install -yq --no-install-recommends \
     apt-transport-https \
@@ -42,9 +42,9 @@ RUN  sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list \
     libsqlite3-dev \
     zlib1g-dev \
     xtail \
-  && wget -O /tmp/r_amd64.deb https://cdn.posit.co/r/ubuntu-2004/pkgs/r-${r}_1_amd64.deb \
-  && wget -O /tmp/shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb \
-  && wget -O /tmp/analytics-platform-shiny-server.tar.gz https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz \
+  && wget --quiet -O /tmp/r_amd64.deb https://cdn.posit.co/r/ubuntu-2004/pkgs/r-${r}_1_amd64.deb \
+  && wget --quiet -O /tmp/shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb \
+  && wget --quiet -O /tmp/analytics-platform-shiny-server.tar.gz https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz \
   && gdebi -n /tmp/r_amd64.deb  \
   && /opt/R/${r}/bin/R -e "install.packages('renv', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
   && /opt/R/${r}/bin/R -e "install.packages('remotes', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
