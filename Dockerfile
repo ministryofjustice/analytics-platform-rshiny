@@ -19,16 +19,16 @@ RUN  sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list \
     ca-certificates \
     python3 \
     python3-boto \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libudunits2-dev \
-    libgdal-dev \
-    gdal-bin \
-    libgeos-dev \
-    libproj-dev \
-    libsqlite3-dev \
-    zlib1g-dev \
-    xtail \
+    # libcurl4-openssl-dev \
+    # libssl-dev \
+    # libudunits2-dev \
+    # libgdal-dev \
+    # gdal-bin \
+    # libgeos-dev \
+    # libproj-dev \
+    # libsqlite3-dev \
+    # zlib1g-dev \
+    # xtail \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && echo "dash dash/sh boolean false" | debconf-set-selections \
@@ -44,7 +44,7 @@ RUN  sed -i 's,deb,deb [trusted=yes],g' /etc/apt/sources.list \
   && wget -O /tmp/r_amd64.deb https://cdn.posit.co/r/ubuntu-2004/pkgs/r-${r}_1_amd64.deb \
   && wget -O /tmp/shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb \
   && wget -O /tmp/analytics-platform-shiny-server.tar.gz https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz \
-  && gdebi -n /tmp/r_amd64.deb  \
+  && gdebi -n /tmp/r_amd64.deb \
   && /opt/R/${r}/bin/R -e "install.packages('renv', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
   && /opt/R/${r}/bin/R -e "install.packages('remotes', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
   && /opt/R/${r}/bin/R -e "install.packages('shiny', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
