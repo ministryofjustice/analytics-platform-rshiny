@@ -52,4 +52,9 @@ RUN rm -rf /srv/shiny-server
 ADD shiny-server.conf /etc/shiny-server/shiny-server.conf
 ADD shiny-server.sh /usr/bin/shiny-server.sh
 
-RUN groupmod -g 998 shiny && usermod -u 998 -u 998 -g 998 shiny && chown -R 998:998 /usr/bin/shiny-server.sh && chmod +x /usr/bin/shiny-server.sh && mkdir -p /srv/shiny/ && chown -R 998:998 /srv/shiny
+RUN  groupmod -g 998 shiny \
+  && usermod -u 998 -u 998 -g 998 shiny \
+  && chown -R 998:998 /usr/bin/shiny-server.sh \
+  && chmod +x /usr/bin/shiny-server.sh \
+  && mkdir -p /srv/shiny/ \
+  && chown -R 998:998 /srv/shiny
