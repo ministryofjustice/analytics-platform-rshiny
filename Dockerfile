@@ -8,8 +8,8 @@ ENV STRINGI_DISABLE_PKG_CONFIG=true \
   PATH="/opt/R/${r}/bin:/opt/shiny-server/bin:/opt/shiny-server/ext/node/bin:${PATH}" \
   SHINY_APP=/srv/shiny-server \
   NODE_ENV=production \
-  TZ="Etc/UTC" \
-  LC_ALL="C.UTF-8"
+  TZ=Etc/UTC \
+  LC_ALL=C.UTF-8
 
 RUN  sed -i 's/deb/deb [trusted=yes]/g' /etc/apt/sources.list \
   && sed -i 's,http://security.ubuntu.com/ubuntu/,http://mirror.bytemark.co.uk/ubuntu/,g' /etc/apt/sources.list \
@@ -45,10 +45,11 @@ RUN  sed -i 's/deb/deb [trusted=yes]/g' /etc/apt/sources.list \
   && wget --quiet -O /tmp/r_amd64.deb https://cdn.posit.co/r/ubuntu-2004/pkgs/r-${r}_1_amd64.deb \
   && wget --quiet -O /tmp/shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb \
   && wget --quiet -O /tmp/analytics-platform-shiny-server.tar.gz https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz \
-  && gdebi -n /tmp/r_amd64.deb  \
-  && /opt/R/${r}/bin/R -e "install.packages('renv', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
-  && /opt/R/${r}/bin/R -e "install.packages('remotes', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
-  && /opt/R/${r}/bin/R -e "install.packages('shiny', repos='https://packagemanager.rstudio.com/cran/__focal__/focal/latest')" \
+  && gdebi -n /tmp/r_amd64.deb \
+  && sed -i 's;# options(repos = c(CRAN="@CRAN@"));options(repos = c(CRAN = "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"));g' /opt/R/${r}/lib/R/library/base/R/Rprofile \
+  && /opt/R/${r}/bin/R -e "install.packages('renv')" \
+  && /opt/R/${r}/bin/R -e "install.packages('remotes')" \
+  && /opt/R/${r}/bin/R -e "install.packages('shiny')" \
   && gdebi -n /tmp/shiny-server.deb \
   && mkdir -p /var/log/shiny-server \
   && npm i -g /tmp/analytics-platform-shiny-server.tar.gz \
@@ -59,8 +60,7 @@ RUN  sed -i 's/deb/deb [trusted=yes]/g' /etc/apt/sources.list \
   && apt-get autoremove -y \
   && apt-get clean \
   && apt-get autoclean \
-  && rm -rf /var/lib/apt/lists/* \ 
-  && sed -i 's;# options(repos = c(CRAN="@CRAN@"));options(repos = c(CRAN = "https://cloud.r-project.org"));g' /opt/R/${r}/lib/R/library/base/R/Rprofile 
+  && rm -rf /var/lib/apt/lists/* 
 
 WORKDIR /srv/shiny-server
 
