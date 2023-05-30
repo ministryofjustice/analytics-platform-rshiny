@@ -77,7 +77,6 @@ RUN mkdir -p /var/log/shiny-server
 
 # RUN groupmod -g 998 shiny
 # RUN usermod -u 998 shiny
-RUN groupadd -g 998 shiny
 RUN useradd -u 998 shiny
 RUN chown 998:998 /var/log/shiny-server
 RUN chown -R 998:998 /srv/shiny-server
