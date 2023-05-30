@@ -43,18 +43,18 @@ RUN  sed -i 's/deb/deb [trusted=yes]/g' /etc/apt/sources.list \
     zlib1g-dev \
     xtail \
   && wget --quiet -O /tmp/r_amd64.deb https://cdn.posit.co/r/ubuntu-2004/pkgs/r-${r}_1_amd64.deb \
-  && wget --quiet -O /tmp/shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb \
-  && wget --quiet -O /tmp/analytics-platform-shiny-server.tar.gz https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz \
+  # && wget --quiet -O /tmp/shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb \
+  # && wget --quiet -O /tmp/analytics-platform-shiny-server.tar.gz https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz \
   && gdebi -n /tmp/r_amd64.deb \
   && sed -i 's;# options(repos = c(CRAN="@CRAN@"));options(repos = c(CRAN = "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"));g' /opt/R/${r}/lib/R/library/base/R/Rprofile \
   && /opt/R/${r}/bin/R -e "install.packages('renv')" \
   && /opt/R/${r}/bin/R -e "install.packages('remotes')" \
-  && /opt/R/${r}/bin/R -e "install.packages('shiny')" \
-  && gdebi -n /tmp/shiny-server.deb \
+  # && /opt/R/${r}/bin/R -e "install.packages('shiny')" \
+  # && gdebi -n /tmp/shiny-server.deb \
   && mkdir -p /var/log/shiny-server \
-  && npm i -g /tmp/analytics-platform-shiny-server.tar.gz \
+  # && npm i -g /tmp/analytics-platform-shiny-server.tar.gz \
   && chown -R shiny:shiny /srv/shiny-server \
-  && rm /tmp/r_amd64.deb /tmp/shiny-server.deb /tmp/analytics-platform-shiny-server.tar.gz \
+  # && rm /tmp/r_amd64.deb /tmp/shiny-server.deb /tmp/analytics-platform-shiny-server.tar.gz \
   && apt-get remove -y \
     gdebi \
   && apt-get autoremove -y \
@@ -70,12 +70,13 @@ WORKDIR /srv/shiny-server
 RUN rm -rf /srv/shiny-server
 
 # Shiny runs as 'shiny' user, adjust app directory permissions
-ADD shiny-server.conf /etc/shiny-server/shiny-server.conf
-ADD shiny-server.sh /usr/bin/shiny-server.sh
+# ADD shiny-server.conf /etc/shiny-server/shiny-server.conf
+# ADD shiny-server.sh /usr/bin/shiny-server.sh
 
 RUN  groupmod -g 998 shiny \
   && usermod -u 998 -u 998 -g 998 shiny \
-  && chown -R 998:998 /usr/bin/shiny-server.sh \
-  && chmod +x /usr/bin/shiny-server.sh \
+  && chown shiny.shiny /var/log/shiny-server \
+  # && chown -R 998:998 /usr/bin/shiny-server.sh \
+  # && chmod +x /usr/bin/shiny-server.sh \
   && mkdir -p /srv/shiny/ \
   && chown -R 998:998 /srv/shiny
