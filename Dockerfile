@@ -51,7 +51,7 @@ RUN  sed -i 's/deb/deb [trusted=yes]/g' /etc/apt/sources.list \
   && /opt/R/${r}/bin/R -e "install.packages('remotes')" \
   # && /opt/R/${r}/bin/R -e "install.packages('shiny')" \
   # && gdebi -n /tmp/shiny-server.deb \
-  && mkdir -p /var/log/shiny-server \
+  # && mkdir -p /var/log/shiny-server \
   # && npm i -g /tmp/analytics-platform-shiny-server.tar.gz \
   # && chown -R shiny:shiny /srv/shiny-server \
   # && rm /tmp/r_amd64.deb /tmp/shiny-server.deb /tmp/analytics-platform-shiny-server.tar.gz \
@@ -73,11 +73,13 @@ RUN rm -rf /srv/shiny-server
 # ADD shiny-server.conf /etc/shiny-server/shiny-server.conf
 # ADD shiny-server.sh /usr/bin/shiny-server.sh
 
-RUN  groupmod -g 998 shiny \
-  && usermod -u 998 -u 998 -g 998 shiny \
-  && chown 998:998 /var/log/shiny-server \
-  && chown -R 998:998 /srv/shiny-server \
+RUN mkdir -p /var/log/shiny-server
+
+RUN groupmod -g 998 shiny
+RUN usermod -u 998 -u 998 -g 998 shiny
+RUN chown 998:998 /var/log/shiny-server
+RUN chown -R 998:998 /srv/shiny-server
   # && chown -R 998:998 /usr/bin/shiny-server.sh \
   # && chmod +x /usr/bin/shiny-server.sh \
-  && mkdir -p /srv/shiny/ \
-  && chown -R 998:998 /srv/shiny
+RUN mkdir -p /srv/shiny/
+RUN chown -R 998:998 /srv/shiny
