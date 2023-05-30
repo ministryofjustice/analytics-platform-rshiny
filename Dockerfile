@@ -75,7 +75,7 @@ RUN rm -rf /srv/shiny-server
 
 RUN  groupmod -g 998 shiny \
   && usermod -u 998 -u 998 -g 998 shiny \
-  && chown shiny.shiny /var/log/shiny-server \
+  && chown 998:998 /var/log/shiny-server \
   # && chown -R 998:998 /usr/bin/shiny-server.sh \
   # && chmod +x /usr/bin/shiny-server.sh \
   && mkdir -p /srv/shiny/ \
