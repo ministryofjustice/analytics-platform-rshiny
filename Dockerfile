@@ -53,7 +53,7 @@ RUN  sed -i 's/deb/deb [trusted=yes]/g' /etc/apt/sources.list \
   # && gdebi -n /tmp/shiny-server.deb \
   && mkdir -p /var/log/shiny-server \
   # && npm i -g /tmp/analytics-platform-shiny-server.tar.gz \
-  && chown -R shiny:shiny /srv/shiny-server \
+  # && chown -R shiny:shiny /srv/shiny-server \
   # && rm /tmp/r_amd64.deb /tmp/shiny-server.deb /tmp/analytics-platform-shiny-server.tar.gz \
   && apt-get remove -y \
     gdebi \
@@ -76,6 +76,7 @@ RUN rm -rf /srv/shiny-server
 RUN  groupmod -g 998 shiny \
   && usermod -u 998 -u 998 -g 998 shiny \
   && chown 998:998 /var/log/shiny-server \
+  && chown -R 998:998 /srv/shiny-server \
   # && chown -R 998:998 /usr/bin/shiny-server.sh \
   # && chmod +x /usr/bin/shiny-server.sh \
   && mkdir -p /srv/shiny/ \
