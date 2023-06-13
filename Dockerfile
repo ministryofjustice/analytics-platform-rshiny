@@ -80,6 +80,6 @@ RUN  groupmod -g 998 shiny \
   && mkdir -p /srv/shiny/ \
   && chown -R 998:998 /srv/shiny
 
-CMD ["/bin/bash", "-c", "/usr/bin/shiny-server.sh"]
+# CMD ["/bin/bash", "-c", "/usr/bin/shiny-server.sh"]
 
 # EXPOSE 80
