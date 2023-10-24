@@ -50,6 +50,8 @@ RUN chown -R 998:998 /var/lib/shiny-server
 RUN chown -R 998:998 /opt/shiny-server
 RUN chown -R 998:998 /var/log/shiny-server
 RUN chown -R 998:998 /etc/init.d/shiny-server
+RUN chown -R 998:998 /usr/local/lib/R/etc
+RUN chown -R 998:998 /usr/local/lib/R/site-library
 RUN chown 998:998 /usr/bin/shiny-server.sh
 RUN chmod +x /usr/bin/shiny-server.sh
 
