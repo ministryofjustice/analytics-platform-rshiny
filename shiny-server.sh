@@ -10,5 +10,7 @@ then
     exec xtail /var/log/shiny-server/ &
 fi
 
+python3 ./gather_env_vars.py
+
 # start shiny server
 exec shiny-server 2>&1

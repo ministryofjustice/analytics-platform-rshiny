@@ -1,81 +1,61 @@
-FROM ubuntu:focal
+ARG r=4.1.3
+FROM rocker/r-ver:${r}
 
-ARG r=4.1.3 # must correspond with a rocker tag as per https://hub.docker.com/r/rocker/shiny/tags
-ARG shinyserver=0.0.6 # must correspond with an analytics-platform-shiny-server version from here: https://github.com/ministryofjustice/analytics-platform-shiny-server
+ARG shinyserver=1.5.20.1002
+ENV SHINY_SERVER_VERSION=${shinyserver}
+ENV PANDOC_VERSION=default
+RUN /rocker_scripts/install_shiny_server.sh
 
 ENV STRINGI_DISABLE_PKG_CONFIG=true \
   AWS_DEFAULT_REGION=eu-west-1 \
-  PATH="/opt/R/${r}/bin:/opt/shiny-server/bin:/opt/shiny-server/ext/node/bin:${PATH}" \
-  SHINY_APP=/srv/shiny-server \
-  NODE_ENV=production \
   TZ=Etc/UTC \
   LC_ALL=C.UTF-8
 
-RUN  sed -i 's/deb/deb [trusted=yes]/g' /etc/apt/sources.list \
-  && sed -i 's,http://security.ubuntu.com/ubuntu/,http://mirror.bytemark.co.uk/ubuntu/,g' /etc/apt/sources.list \
-  && sed -i 's,http://archive.ubuntu.com/ubuntu/,http://mirror.bytemark.co.uk/ubuntu/,g' /etc/apt/sources.list \
-  && apt-get update -yq -y \
-  && apt-get install -yq --no-install-recommends \
-    apt-transport-https \
-    ca-certificates \
-  && sed -i s,http:,https:,g /etc/apt/sources.list \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/* \
-  && echo "dash dash/sh boolean false" | debconf-set-selections \
-  && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash \
-  && apt-get update \
-  && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -yq --no-install-recommends \
-    wget \
-    curl \
-    git \
-    gdebi \
-    tzdata \
-    python3 \
-    python3-boto \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    libudunits2-dev \
-    libgdal-dev \
-    gdal-bin \
-    libgeos-dev \
-    libproj-dev \
-    libsqlite3-dev \
-    zlib1g-dev \
-    xtail \
-  && wget --quiet -O /tmp/r_amd64.deb https://cdn.posit.co/r/ubuntu-2004/pkgs/r-${r}_1_amd64.deb \
-  && wget --quiet -O /tmp/shiny-server.deb https://download3.rstudio.org/ubuntu-18.04/x86_64/shiny-server-1.5.20.1002-amd64.deb \
-  && wget --quiet -O /tmp/analytics-platform-shiny-server.tar.gz https://github.com/ministryofjustice/analytics-platform-shiny-server/archive/refs/tags/v${shinyserver}.tar.gz \
-  && gdebi -n /tmp/r_amd64.deb \
-  && sed -i 's;# options(repos = c(CRAN="@CRAN@"));options(repos = c(CRAN = "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"));g' /opt/R/${r}/lib/R/library/base/R/Rprofile \
-  && /opt/R/${r}/bin/R -e "install.packages('renv')" \
-  && /opt/R/${r}/bin/R -e "install.packages('remotes')" \
-  && /opt/R/${r}/bin/R -e "install.packages('shiny')" \
-  && gdebi -n /tmp/shiny-server.deb \
-  && mkdir -p /var/log/shiny-server \
-  && npm i -g /tmp/analytics-platform-shiny-server.tar.gz \
-  && chown -R shiny:shiny /srv/shiny-server \
-  && rm /tmp/r_amd64.deb /tmp/shiny-server.deb /tmp/analytics-platform-shiny-server.tar.gz \
-  && apt-get remove -y \
-    gdebi \
-  && apt-get autoremove -y \
-  && apt-get clean \
-  && apt-get autoclean \
-  && rm -rf /var/lib/apt/lists/* 
-
 WORKDIR /srv/shiny-server
 
-#SHELL ["/bin/bash", "-c"]
-
 # Cleanup shiny-server dir
-RUN rm -rf /srv/shiny-server
+RUN rm -rf ./*
+
+# Make sure the directory for individual app logs exists
+RUN mkdir -p /var/log/shiny-server
+
+# Ensure Python venv is installed (used by reticulate).
+RUN apt-get update -y && \
+  apt-get install -y \
+  python3 \
+  python3-pip \
+  python3-venv \
+  python3-dev \
+  libxml2-dev \
+  libssl-dev
+
+
+# APT Cleanup
+RUN apt-get clean && rm -rf /var/lib/apt/lists/
 
 # Shiny runs as 'shiny' user, adjust app directory permissions
 ADD shiny-server.conf /etc/shiny-server/shiny-server.conf
 ADD shiny-server.sh /usr/bin/shiny-server.sh
 
-RUN  groupmod -g 998 shiny \
-  && usermod -u 998 -u 998 -g 998 shiny \
-  && chown -R 998:998 /usr/bin/shiny-server.sh \
-  && chmod +x /usr/bin/shiny-server.sh \
-  && mkdir -p /srv/shiny/ \
-  && chown -R 998:998 /srv/shiny
+# Patch the shiny server to allow custom headers
+RUN sed -i 's/createWebSocketClient(pathInfo)/createWebSocketClient(pathInfo, conn.headers)/' /opt/shiny-server/lib/proxy/sockjs.js
+RUN sed -i "s/'referer'/'referer', 'cookie', 'user_email'/" /opt/shiny-server/node_modules/sockjs/lib/transport.js
+
+RUN groupmod -g 998 shiny
+RUN usermod -u 998 -g 998 shiny
+RUN chown -R 998:998 .
+RUN chown -R 998:998 /etc/shiny-server
+RUN chown -R 998:998 /var/lib/shiny-server
+
+RUN chown -R 998:998 /opt/shiny-server
+RUN chown -R 998:998 /var/log/shiny-server
+RUN chown -R 998:998 /etc/init.d/shiny-server
+RUN chown 998:998 /usr/bin/shiny-server.sh
+RUN chmod +x /usr/bin/shiny-server.sh
+
+RUN chown 998:998 /etc/profile
+
+USER 998
+
+CMD ["/usr/bin/shiny-server.sh"]
+EXPOSE 3838
